@@ -1,0 +1,16 @@
+# Core Spark Streaming
+pyspark
+
+# Reddit API
+praw
+
+# Kafka client for Python producer (optional if only Spark connects)
+kafka-python
+
+# PostgreSQL connector for Spark JDBC sink
+psycopg2-binary
+
+# Sentiment analysis (optional: pick one)
+vaderSentiment
+# OR
+textblob
