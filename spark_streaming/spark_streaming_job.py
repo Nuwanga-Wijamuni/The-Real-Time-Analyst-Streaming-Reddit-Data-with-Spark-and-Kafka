@@ -36,7 +36,7 @@ def main():
         StructField("num_comments", IntegerType(), True)
     ])
 
-    # 3️⃣ Read data from the Kafka topic
+    
     kafka_df = spark.readStream \
         .format("kafka") \
         .option("kafka.bootstrap.servers", kafka_bootstrap_servers) \
@@ -44,17 +44,17 @@ def main():
         .option("startingOffsets", "latest") \
         .load()
 
-    # 4️⃣ Parse the JSON data and filter out any potential null authors
+    
     parsed_df = kafka_df.selectExpr("CAST(value AS STRING)") \
         .select(from_json(col("value"), schema).alias("data")) \
         .select("data.*") \
         .filter(col("author").isNotNull())
 
-    # 5️⃣ Apply sentiment analysis UDF
+    # 5 Apply sentiment analysis UDF
     sentiment_udf = udf(get_sentiment, DoubleType())
     df_with_sentiment = parsed_df.withColumn("sentiment_score", sentiment_udf(col("title")))
 
-    # 6️⃣ Select and rename columns to match the database table schema
+    
     final_df = df_with_sentiment.select(
         col("created_utc").cast(TimestampType()).alias("timestamp"),
         col("author"),
@@ -63,7 +63,7 @@ def main():
         col("subreddit")
     )
 
-    # 7️⃣ Write the processed data to PostgreSQL using the imported helper function
+    
     query = final_df.writeStream \
         .outputMode("append") \
         .foreachBatch(write_to_postgres) \
