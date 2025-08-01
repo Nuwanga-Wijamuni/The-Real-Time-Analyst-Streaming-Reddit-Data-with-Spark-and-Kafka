@@ -22,7 +22,7 @@ def main():
     spark = get_spark_session()
 
     # Get Kafka bootstrap servers from environment variable for flexibility
-    kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:29092")
+    kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:29092")
 
     # 2️⃣ Define the schema for the incoming JSON data from Kafka
     schema = StructType([
